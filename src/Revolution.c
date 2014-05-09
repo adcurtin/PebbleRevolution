@@ -22,8 +22,8 @@
 #define DATE_IMAGE_WIDTH    20
 #define DATE_IMAGE_HEIGHT   20
 
-#define SECOND_IMAGE_WIDTH  10
-#define SECOND_IMAGE_HEIGHT 10
+#define YEAR_IMAGE_WIDTH  10
+#define YEAR_IMAGE_HEIGHT 10
 
 #define DAY_IMAGE_WIDTH     20
 #define DAY_IMAGE_HEIGHT    10
@@ -50,12 +50,12 @@ const int DATE_IMAGE_RESOURCE_IDS[NUMBER_OF_DATE_IMAGES] = {
   RESOURCE_ID_IMAGE_DATE_7, RESOURCE_ID_IMAGE_DATE_8, RESOURCE_ID_IMAGE_DATE_9
 };
 
-#define NUMBER_OF_SECOND_IMAGES 10
-const int SECOND_IMAGE_RESOURCE_IDS[NUMBER_OF_SECOND_IMAGES] = {
-  RESOURCE_ID_IMAGE_SECOND_0, 
-  RESOURCE_ID_IMAGE_SECOND_1, RESOURCE_ID_IMAGE_SECOND_2, RESOURCE_ID_IMAGE_SECOND_3, 
-  RESOURCE_ID_IMAGE_SECOND_4, RESOURCE_ID_IMAGE_SECOND_5, RESOURCE_ID_IMAGE_SECOND_6, 
-  RESOURCE_ID_IMAGE_SECOND_7, RESOURCE_ID_IMAGE_SECOND_8, RESOURCE_ID_IMAGE_SECOND_9
+#define NUMBER_OF_YEAR_IMAGES 10
+const int YEAR_IMAGE_RESOURCE_IDS[NUMBER_OF_YEAR_IMAGES] = {
+  RESOURCE_ID_IMAGE_YEAR_0, 
+  RESOURCE_ID_IMAGE_YEAR_1, RESOURCE_ID_IMAGE_YEAR_2, RESOURCE_ID_IMAGE_YEAR_3, 
+  RESOURCE_ID_IMAGE_YEAR_4, RESOURCE_ID_IMAGE_YEAR_5, RESOURCE_ID_IMAGE_YEAR_6, 
+  RESOURCE_ID_IMAGE_YEAR_7, RESOURCE_ID_IMAGE_YEAR_8, RESOURCE_ID_IMAGE_YEAR_9
 };
 
 #define NUMBER_OF_DAY_IMAGES 7
@@ -108,11 +108,10 @@ static DayItem day_item;
 static Layer *date_layer;
 static Slot date_slots[NUMBER_OF_DATE_SLOTS];
 
-// Seconds
-#define NUMBER_OF_SECOND_SLOTS 2
-static Layer *seconds_layer;
-static Slot second_slots[NUMBER_OF_SECOND_SLOTS];
-
+// Year
+#define NUMBER_OF_YEAR_SLOTS 2
+static Layer *year_layer;
+static Slot year_slots[NUMBER_OF_YEAR_SLOTS];
 
 // General
 void destroy_property_animation(PropertyAnimation **prop_animation);
@@ -138,14 +137,14 @@ void display_date(struct tm *tick_time);
 void display_date_value(int value, int part_number);
 void update_date_slot(Slot *date_slot, int digit_value);
 
-// Seconds
-void display_seconds(struct tm *tick_time);
-void update_second_slot(Slot *second_slot, int digit_value);
+// Year
+void display_year(struct tm *tick_time);
+void update_year_slot(Slot *year_slot, int digit_value);
 
 // Handlers
 int main(void);
 void init();
-void handle_second_tick(struct tm *tick_time, TimeUnits units_changed);
+void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed);
 void deinit();
 
 
@@ -412,34 +411,33 @@ void update_date_slot(Slot *date_slot, int digit_value) {
   load_digit_image_into_slot(date_slot, digit_value, date_layer, frame, DATE_IMAGE_RESOURCE_IDS);
 }
 
-// Seconds
-void display_seconds(struct tm *tick_time) {
-  int seconds = tick_time->tm_sec;
+// Year
+void display_year(struct tm *tick_time) {
+  int year = tick_time->tm_year;
 
-  seconds = seconds % 100; // Maximum of two digits per row.
+  year = year % 100; // it's years since 1900
 
-  for (int second_slot_number = 1; second_slot_number >= 0; second_slot_number--) {
-    Slot *second_slot = &second_slots[second_slot_number];
+  for (int year_slot_number = 1; year_slot_number >= 0; year_slot_number--) {
+    Slot *year_slot = &year_slots[year_slot_number];
 
-    update_second_slot(second_slot, seconds % 10);
-    
-    seconds = seconds / 10;
+    update_year_slot(year_slot, year % 10);
+    year = year / 10;
   }
 }
 
-void update_second_slot(Slot *second_slot, int digit_value) {
-  if (second_slot->state == digit_value)
+void update_year_slot(Slot *year_slot, int digit_value) {
+  if (year_slot->state == digit_value)
     return;
 
   GRect frame = GRect(
-    second_slot->number * (SECOND_IMAGE_WIDTH + MARGIN), 
-    0, 
-    SECOND_IMAGE_WIDTH, 
-    SECOND_IMAGE_HEIGHT
+    year_slot->number * (YEAR_IMAGE_WIDTH + MARGIN),
+    0,
+    YEAR_IMAGE_WIDTH,
+    YEAR_IMAGE_HEIGHT
   );
 
-  unload_digit_image_from_slot(second_slot);
-  load_digit_image_into_slot(second_slot, digit_value, seconds_layer, frame, SECOND_IMAGE_RESOURCE_IDS);
+  unload_digit_image_from_slot(year_slot);
+  load_digit_image_into_slot(year_slot, digit_value, year_layer, frame, YEAR_IMAGE_RESOURCE_IDS);
 }
 
 // Handlers
@@ -503,22 +501,21 @@ void init() {
   date_layer = layer_create(date_layer_frame);
   layer_add_child(footer_layer, date_layer);
 
-  // Seconds
-  for (int i = 0; i < NUMBER_OF_SECOND_SLOTS; i++) {
-    Slot *second_slot = &second_slots[i];
-    second_slot->number = i;
-    second_slot->state  = EMPTY_SLOT;
+ // Year
+  for (int i = 0; i < NUMBER_OF_YEAR_SLOTS; i++) {
+    Slot *year_slot = &year_slots[i];
+    year_slot->number = i;
+    year_slot->state  = EMPTY_SLOT;
   }
 
-  GRect seconds_layer_frame = GRect(
-    SCREEN_WIDTH - SECOND_IMAGE_WIDTH - MARGIN - SECOND_IMAGE_WIDTH - MARGIN, 
-    footer_height - SECOND_IMAGE_HEIGHT - MARGIN, 
-    SECOND_IMAGE_WIDTH + MARGIN + SECOND_IMAGE_WIDTH, 
-    SECOND_IMAGE_HEIGHT
+  GRect year_layer_frame = GRect(
+    SCREEN_WIDTH - YEAR_IMAGE_WIDTH - MARGIN - YEAR_IMAGE_WIDTH - MARGIN,
+    footer_height - YEAR_IMAGE_HEIGHT - MARGIN,
+    YEAR_IMAGE_WIDTH + MARGIN + YEAR_IMAGE_WIDTH,
+    YEAR_IMAGE_HEIGHT
   );
-  seconds_layer = layer_create(seconds_layer_frame);
-  layer_add_child(footer_layer, seconds_layer);
-
+  year_layer = layer_create(year_layer_frame);
+  layer_add_child(footer_layer, year_layer);
 
   // Display
   time_t now = time(NULL);
@@ -526,13 +523,12 @@ void init() {
   display_time(tick_time);
   display_day(tick_time);
   display_date(tick_time);
-  display_seconds(tick_time);
+  display_year(tick_time);
 
-  tick_timer_service_subscribe(SECOND_UNIT, handle_second_tick);
+  tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
 }
 
-void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
-  display_seconds(tick_time);
+void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 
   if ((units_changed & MINUTE_UNIT) == MINUTE_UNIT) {
     display_time(tick_time);
@@ -547,6 +543,10 @@ void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
   if ((units_changed & DAY_UNIT) == DAY_UNIT) {
     display_day(tick_time);
     display_date(tick_time);
+  }
+
+  if ((units_changed & YEAR_UNIT) == YEAR_UNIT) {
+    display_year(tick_time);
   }
 }
 
@@ -570,11 +570,11 @@ void deinit() {
   }
   layer_destroy(date_layer);
 
-  // Seconds
-  for (int i = 0; i < NUMBER_OF_SECOND_SLOTS; i++) {
-    unload_digit_image_from_slot(&second_slots[i]);
+  // Year
+  for (int i = 0; i < NUMBER_OF_YEAR_SLOTS; i++) {
+    unload_digit_image_from_slot(&year_slots[i]);
   }
-  layer_destroy(seconds_layer);
+  layer_destroy(year_layer);
 
 
   layer_destroy(footer_layer);
