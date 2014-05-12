@@ -5,6 +5,7 @@
 // Based on the display of the Freebox Revolution, which was designed by Philippe Starck.
 
 #include <pebble.h>
+#include "QTPlus.h"
 
 
 // Settings
@@ -442,6 +443,17 @@ void update_year_slot(Slot *year_slot, int digit_value) {
 
 // Handlers
 int main(void) {
+  // Configure QT+
+  qtp_set_config(
+      QTP_K_AUTOHIDE  /* Autohide the window*/
+      | QTP_K_SHOW_TIME  /* Show clock*/
+      | QTP_K_SHOW_WEATHER /* Show weather*/
+      | QTP_K_DEGREES_F  /* Use Fahrenheit for temperatures*/
+      | QTP_K_INVERT
+      | QTP_K_SUBSCRIBE);  /* Subscribe to bluetooth*/
+  qtp_set_timeout(4000); /* Window display length in milliseconds */
+  qtp_setup();
+
   init();
   app_event_loop();
   deinit();
@@ -551,6 +563,7 @@ void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 void deinit() {
+  qtp_app_deinit();
   // Time
   for (int i = 0; i < NUMBER_OF_TIME_SLOTS; i++) {
     unload_digit_image_from_slot(&time_slots[i].slot);
