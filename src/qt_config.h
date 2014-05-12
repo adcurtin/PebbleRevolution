@@ -1,10 +1,12 @@
 
 // Configure QT+
-qtp_set_config(
-	QTP_K_AUTOHIDE	/* Autohide the window*/
-	 | QTP_K_SHOW_TIME	/* Show clock*/
-	 | QTP_K_SHOW_WEATHER	/* Show weather*/
-	 | QTP_K_DEGREES_F	/* Use Fahrenheit for temperatures*/
-	 | QTP_K_SUBSCRIBE	/* Subscribe to bluetooth*/);
+// #define QTP_K_SHOW_TIME 1
+// #define QTP_K_SHOW_WEATHER 2
+// #define QTP_K_AUTOHIDE 4
+// #define QTP_K_DEGREES_F 8
+// #define QTP_K_INVERT 16
+// #define QTP_K_SUBSCRIBE 32
+// #define QTP_K_VIBRATE 64
 
-qtp_set_timeout(2000); /* Window display length in milliseconds */
+// Uncomment for log messages
+// #define QTP_DEBUG 1

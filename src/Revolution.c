@@ -451,7 +451,7 @@ int main(void) {
       | QTP_K_DEGREES_F  /* Use Fahrenheit for temperatures*/
       | QTP_K_INVERT
       | QTP_K_SUBSCRIBE);  /* Subscribe to bluetooth*/
-  qtp_set_timeout(4000); /* Window display length in milliseconds */
+  qtp_set_timeout(2000); /* Window display length in milliseconds */
   qtp_setup();
 
   init();
