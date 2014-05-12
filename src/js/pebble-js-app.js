@@ -8,7 +8,7 @@
 		* Round floats to a certain number of places
 		*/
 		var roundTo = function(flpt, places) {
-			return	(Math.round( (parseInt( flpt * Math.pow(10, places+1), 10) / 10.0) ) / Math.pow(10,places));
+			return	(Math.round( (parseInt( flpt * Math.pow(10, places+1), 10) / 10) ) / Math.pow(10,places));
 		};
 
 		/**
