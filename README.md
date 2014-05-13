@@ -1,36 +1,12 @@
 ## Revolution watchface
 
-![Photo](http://d.pr/i/Qe9k+)
+Modified version of [Revolution](https://github.com/DouweM/PebbleRevolution/) by Douwe Maan.
 
-[Video of time animation](http://d.pr/v/nQWY)
+I made the watchface display the year instead of seconds to improve battery life, updating the display and processing only once per minute, instead of every second.
 
-Implemented by Douwe Maan.
+It is the American date format.
 
-Envisioned as a watchface by Jean-Noël Mattern (Jnm), who posted it in the ["Watch-face ideas" thread](http://forums.getpebble.com/discussion/comment/3538/#Comment_3538) on the Pebble forums.
 
-Based on the display of the [Freebox Revolution](http://www.free.fr/adsl/freebox-revolution.html), which was designed by Philippe Starck.
+I added [QuickTapPlus](https://github.com/grep-awesome/QuickTapPlus) by grep-awesome. I used a black background, showed the time and weather, and enabled autohide after two seconds. I made quicktap only trigger on z axis motion (straight into or out of the screen) so I can twist for just backlight and still have the time nice and large, but still fairly easily activate QTP.
 
-### Download version 2.0.1
-
-* [Revolution.pbw](https://github.com/DouweM/PebbleRevolution/raw/master/releases/Revolution.pbw)
-* [Revolution-VibeOnHour.pbw](https://github.com/DouweM/PebbleRevolution/raw/master/releases/Revolution-VibeOnHour.pbw) (vibrates on the hour)
-
-#### American (date formatted as MM-DD)
-* [Revolution-American.pbw](https://github.com/DouweM/PebbleRevolution/raw/master/releases/Revolution-American.pbw)
-* [Revolution-American-VibeOnHour.pbw](https://github.com/DouweM/PebbleRevolution/raw/master/releases/Revolution-American-VibeOnHour.pbw) (vibrates on the hour)
-
-## License
-Copyright (c) 2013 [Douwe Maan](http://www.douwemaan.com/)
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+There were a couple bugs in QTP, so I fixed them and it hopefully shouldn't crash anymore (if you get this watchface to crash, let me know - I'd love to fix it). I made some performance and efficiency improvements as well.
