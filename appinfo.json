@@ -3,8 +3,8 @@
   "shortName":    "RevolutionYear",
   "longName":     "RevolutionYear",
   "companyName":  "adcurtin",
-  "versionCode":  100,
-  "versionLabel": "1.0.0",
+  "versionCode":  101,
+  "versionLabel": "1.0.1",
   "watchapp": {
     "watchface": true
   },
