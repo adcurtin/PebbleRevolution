@@ -103,7 +103,7 @@
 			var req = new XMLHttpRequest();
 			var url = "http://api.openweathermap.org/data/2.5/weather?" +
 				"lat=" + roundTo(loc.coords.latitude,2) + "&lon=" + roundTo(loc.coords.longitude,2);
-			console.log("Requestiong weather at: " + url);
+			console.log("Requesting weather at: " + url);
 			req.open('GET', url, true);
 			req.onload = function(e) {
 				if (req.readyState == 4 && req.status == 200) {

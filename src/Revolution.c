@@ -539,7 +539,7 @@ void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 
   if ((units_changed & MINUTE_UNIT) == MINUTE_UNIT) {
     display_time(tick_time);
-    if (abs(tick_time->tm_min - temp_last_updated) >= 10) {
+    if (abs(tick_time->tm_min - temp_last_updated) >= 15) {
       display_temp();
       // APP_LOG(APP_LOG_LEVEL_DEBUG, "updating temp. last: %d current: %d", temp_last_updated, tick_time->tm_min);
       temp_last_updated = tick_time->tm_min;
