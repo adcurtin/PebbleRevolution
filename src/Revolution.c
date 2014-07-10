@@ -139,8 +139,11 @@ void display_date_value(int value, int part_number);
 void update_date_slot(Slot *date_slot, int digit_value);
 
 // Year
-void display_year(struct tm *tick_time);
 void update_year_slot(Slot *year_slot, int digit_value);
+
+// Temperature
+void display_temp();
+int temp_last_updated = -11;
 
 // Handlers
 int main(void);
@@ -413,18 +416,6 @@ void update_date_slot(Slot *date_slot, int digit_value) {
 }
 
 // Year
-void display_year(struct tm *tick_time) {
-  int year = tick_time->tm_year;
-
-  year = year % 100; // it's years since 1900
-
-  for (int year_slot_number = 1; year_slot_number >= 0; year_slot_number--) {
-    Slot *year_slot = &year_slots[year_slot_number];
-
-    update_year_slot(year_slot, year % 10);
-    year = year / 10;
-  }
-}
 
 void update_year_slot(Slot *year_slot, int digit_value) {
   if (year_slot->state == digit_value)
@@ -439,6 +430,19 @@ void update_year_slot(Slot *year_slot, int digit_value) {
 
   unload_digit_image_from_slot(year_slot);
   load_digit_image_into_slot(year_slot, digit_value, year_layer, frame, YEAR_IMAGE_RESOURCE_IDS);
+}
+
+void display_temp() {
+  const Tuple *temp_tuple;
+  temp_tuple = app_sync_get(&qtp_sync, QTP_WEATHER_TEMP_F_TWO_DIGIT_KEY);
+  int temp = temp_tuple->value->int16;
+  for (int year_slot_number = 1; year_slot_number >= 0; year_slot_number--) {
+    Slot *year_slot = &year_slots[year_slot_number];
+
+    update_year_slot(year_slot, temp % 10);
+    temp = temp / 10;
+  }
+
 }
 
 // Handlers
@@ -527,7 +531,6 @@ void init() {
   display_time(tick_time);
   display_day(tick_time);
   display_date(tick_time);
-  display_year(tick_time);
 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
 }
@@ -536,6 +539,11 @@ void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 
   if ((units_changed & MINUTE_UNIT) == MINUTE_UNIT) {
     display_time(tick_time);
+    if (abs(tick_time->tm_min - temp_last_updated) > 10) {
+      display_temp();
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "updating temp. last: %d current: %d", temp_last_updated, tick_time->tm_min);
+      temp_last_updated = tick_time->tm_min;
+    }
   }
 
 #if VIBE_ON_HOUR
@@ -547,10 +555,6 @@ void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
   if ((units_changed & DAY_UNIT) == DAY_UNIT) {
     display_day(tick_time);
     display_date(tick_time);
-  }
-
-  if ((units_changed & YEAR_UNIT) == YEAR_UNIT) {
-    display_year(tick_time);
   }
 }
 

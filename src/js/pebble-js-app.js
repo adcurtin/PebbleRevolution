@@ -39,7 +39,8 @@
 				"1": "---\u00B0F",
 				"2": "N/A",
 				"3": "N/A",
-				"4": "---\u00B0F"
+				"4": "---\u00B0F",
+				"5": 0
 			});
 		};
 
@@ -154,7 +155,8 @@
 								"1": roundTo(((1.8 * weather.temperature)+32), 1).toString() + "\u00B0F",
 								"2": weather.city,
 								"3": weather.description,
-								"4": roundTo(weather.temperature,1).toString() + "\u00B0C"
+								"4": roundTo(weather.temperature,1).toString() + "\u00B0C",
+								"5": roundTo(((1.8 * weather.temperature)+32), 0)
 							});
 						} else {
 							console.log("Unable to retrieve weather");
